@@ -1,0 +1,83 @@
+# cmake-fmt configuration file (TOML format)
+
+# Used by the cmake-fmt VSCode extension (paralleldimension.cmake-fmt) to format CMakeLists.txt and *.cmake files.
+
+# Reference: https://marketplace.visualstudio.com/items?itemName=paralleldimension.cmake-fmt
+#
+# VS Code setup: to use cmake-fmt as the default CMake formatter, add to
+# .vscode/settings.json (workspace) or %APPDATA%\Code\User\settings.json (global):
+#
+#   "[cmake]": {
+#     "editor.defaultFormatter": "paralleldimension.cmake-fmt"
+#   }
+
+# Stop inheriting config from parent directories
+root = true
+
+# Disable formatting entirely (useful to temporarily turn off)
+disable_format = false
+
+# Number of spaces per indentation level (when use_tabs = false)
+indent_width = 2
+
+# Maximum line length before wrapping (0 = unlimited)
+max_line_length = 0
+
+# Use tab characters for indentation instead of spaces
+use_tabs = false
+
+# Casing for built-in CMake commands (add_executable, target_link_libraries, ...)
+# Options: lowercase, uppercase, preserve
+command_case = "lowercase"
+
+# Casing for user-defined commands
+# Options: lowercase, uppercase, preserve, infer
+user_command_case = "infer"
+
+# Maximum consecutive blank lines allowed
+max_blank_lines = 1
+
+# Line ending style written to files
+# Options: auto (match existing), lf, crlf
+line_ending = "auto"
+
+# How closing keywords are formatted (endif() vs endif(CONDITION))
+# Options: preserve, remove (strip arg), force (repeat opening arg)
+closing_style = "remove"
+
+# Always place each keyword argument on its own line
+force_break_keywords = false
+
+# Whether a final newline is added at end of file
+# Options: preserve, remove, force
+final_newline = "force"
+
+# Formatting of inline comments
+# Options: preserve, hash_space (# comment), hash_no_space (#comment)
+comment_style = "hash_space"
+
+# How source file lists are grouped when sort_sources is active
+# Options: none, headers_first, sources_first
+source_grouping = "none"
+
+# Whether source file lists are sorted alphabetically
+# Options: none, alphabetical
+# NOTE: "alphabetical" can incorrectly reorder non source arguments (PROPERTIES keyword args)
+# like: LINK_FLAGS "/LARGEADDRESSAWARE" to PROPERTIES "/LARGEADDRESSAWARE" LINK_FLAGS
+sort_sources = "none"
+
+# Collapse keyword sections that have no arguments onto one line (PRIVATE, PUBLIC, INTERFACE)
+collapse_empty_flags = true
+
+# Allow a single-argument keyword block to stay on the same line as the keyword
+inline_single_keyword = false
+
+# Add a space between a control-flow command name and its opening paren
+# "if (" vs "if("
+control_flow_space_before_paren = false
+
+# Add spaces inside command parentheses: "command( args )" vs "command(args)"
+space_between_command_parens = false
+
+# Indent the closing parenthesis to match the opening indentation level
+indent_closing_paren = false
