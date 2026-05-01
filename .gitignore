@@ -151,3 +151,6 @@ Thumbs.db
 
 # Default build directory
 /build/
+
+# venv
+/.venv/

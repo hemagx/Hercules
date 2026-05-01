@@ -16,9 +16,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-cmake_minimum_required(VERSION 3.19)
+cmake_minimum_required(VERSION 3.24)
 
-set(PROJECT_NAME hercules LANGUAGES C)
+set(PROJECT_NAME hercules LANGUAGES C CXX)
 project(${PROJECT_NAME})
 
 # CMake settings
@@ -164,13 +164,10 @@ endif()
 
 # Check for libraries
 if(ENABLE_LIBBACKTRACE)
-  find_package(Backtrace REQUIRED)
-  if(Backtrace_FOUND)
-    test_header_def(execinfo HAVE_EXECINFO OFF)
-    testadd_compiler_flag(funwind-tables ON)
-    add_compile_definitions(HAVE_LIBBACKTRACE)
-    # There's more checks in configure.ac but they seem to be meant for compiling libbacktrace but we're not doing that
-  endif()
+  find_package(libbacktrace REQUIRED)
+  test_header_def(execinfo HAVE_EXECINFO OFF)
+  testadd_compiler_flag(funwind-tables ON)
+  add_compile_definitions(HAVE_LIBBACKTRACE)
 endif()
 
 if("${WITH_HTTP_PARSER}" STREQUAL "http-parser")
@@ -181,6 +178,11 @@ elseif("${WITH_HTTP_PARSER}" STREQUAL "llhttp")
 else()
   message(FATAL_ERROR "unknown http_parser selected '${WITH_HTTP_PARSER}'. Allowed values: http-parser, llhttp. ... stopping")
 endif()
+
+find_package(cJSON REQUIRED)
+find_package(mariadb-connector-c REQUIRED)
+find_package(pcre REQUIRED)
+find_package(ZLIB REQUIRED)
 
 # Check for compile settings
 
