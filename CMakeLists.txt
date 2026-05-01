@@ -121,6 +121,7 @@ testadd_warning_compiler_flag(no-missing-field-initializers OFF)
 testadd_warning_compiler_flag(no-discarded-qualifiers OFF)
 testadd_warning_compiler_flag(no-unused-but-set-variable OFF)
 testadd_warning_compiler_flag(shadow OFF)
+testadd_warning_compiler_flag(no-deprecated-non-prototype OFF)
 
 # Linker flags
 
@@ -210,3 +211,7 @@ get_directory_property(MYDEFS COMPILE_OPTIONS)
 message("CFLAGS=${MYDEFS}")
 get_directory_property(MYDEFS COMPILE_DEFINITIONS)
 message("DEFS=${MYDEFS}")
+
+include_directories(${PROJECT_SOURCE_DIR}/src)
+include_directories(${PROJECT_SOURCE_DIR}/3rdparty)
+add_subdirectory(3rdparty)
