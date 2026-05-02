@@ -76,6 +76,7 @@ set(COMMON_HDRS
   sql.h
   strlib.h
   sysinfo.h
+  "${AUTOGEN_DIR}/sysinfo.inc"
   thread.h
   timer.h
   utils.h
@@ -127,3 +128,20 @@ target_link_libraries(common PRIVATE ZLIB::ZLIB)
 if("${COMMON_MEMORY_MANAGER_LINK}")
   target_link_libraries(common PRIVATE ${COMMON_MEMORY_MANAGER_LINK})
 endif()
+
+# Run sysinfogen.sh whenever src/common/sysinfo.inc is required in a build
+
+# In original configure.ac CPFLAGS and DEFs can be mixed but LDFLAGS isn't included
+get_directory_property(SYSGEN_CFLAGS COMPILE_OPTIONS)
+get_directory_property(SYSGEN_DEFS COMPILE_DEFINITIONS)
+
+add_custom_command(
+  OUTPUT "${AUTOGEN_DIR}/sysinfo.inc"
+  COMMAND
+    "${CMAKE_SOURCE_DIR}/sysinfogen.sh"
+    "${AUTOGEN_DIR}/sysinfo.inc"
+    ${SYSGEN_CFLAGS}
+    ${SYSGEN_DEFS}
+  DEPENDS "${CMAKE_SOURCE_DIR}/sysinfogen.sh"
+  WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+)

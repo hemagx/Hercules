@@ -52,6 +52,11 @@ else()
   set(RUNNING_ON_LINUX OFF)
 endif()
 
+# Auto generated files directory in build dir
+set(AUTOGEN_DIR "${CMAKE_BINARY_DIR}/autogen")
+file(MAKE_DIRECTORY "${AUTOGEN_DIR}")
+include_directories(${AUTOGEN_DIR})
+
 include(CMakeDependentOption)
 # Configuration options
 set(ENABLE_MEMORY_MANAGER "builtin" CACHE STRING "memory managers: no, builtin, memwatch, dmalloc, gcollect, bcheck (defaults to builtin)")
@@ -501,17 +506,6 @@ if(${MAX_CONNECTIONS})
     add_compile_definitions("MAXCONN=${MAX_CONNECTIONS}")
   endif()
 endif()
-
-# Run sysinfogen.sh whenever src/common/sysinfo.inc is required in a build
-add_custom_command(
-  OUTPUT "${CMAKE_CURRENT_SOURCE_DIR}/src/common/sysinfo.inc"
-  COMMAND
-    ./sysinfogen.sh
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/common/sysinfo.inc
-    ${CMAKE_C_FLAGS}
-    ${CMAKE_CPP_FLAGS}
-  DEPENDS sysinfogen.sh
-)
 
 get_directory_property(MYDEFS LINK_OPTIONS)
 message("LDFLAGS=${MYDEFS}")
