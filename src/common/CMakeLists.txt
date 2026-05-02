@@ -121,7 +121,9 @@ add_library(common STATIC
 
 target_link_libraries(common PRIVATE hercules-mt19937ar)
 target_link_libraries(common PRIVATE hercules-libconfig)
-target_link_libraries(common PRIVATE libbacktrace::libbacktrace)
+if(ENABLE_LIBBACKTRACE)
+  target_link_libraries(common PRIVATE libbacktrace::libbacktrace)
+endif()
 target_link_libraries(common PRIVATE mariadb-connector-c::mariadb-connector-c)
 target_link_libraries(common PRIVATE ZLIB::ZLIB)
 
