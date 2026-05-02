@@ -123,3 +123,7 @@ target_link_libraries(common PRIVATE hercules-libconfig)
 target_link_libraries(common PRIVATE libbacktrace::libbacktrace)
 target_link_libraries(common PRIVATE mariadb-connector-c::mariadb-connector-c)
 target_link_libraries(common PRIVATE ZLIB::ZLIB)
+
+if("${COMMON_MEMORY_MANAGER_LINK}")
+  target_link_libraries(common PRIVATE ${COMMON_MEMORY_MANAGER_LINK})
+endif()

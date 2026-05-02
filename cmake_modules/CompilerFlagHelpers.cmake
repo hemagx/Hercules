@@ -62,3 +62,51 @@ function(testadd_linker_flag _name _required)
     message(FATAL_ERROR "Linker flag -${_name} is required")
   endif()
 endfunction()
+
+# Tests for a sanitizer flag
+# _name flag name
+# _required boolean to fail if check doesn't pass
+function(testadd_sanitizer_flag _name _required)
+  string(REGEX REPLACE "[^A-Za-z0-9_]" "_" _TESTADD_SANITIZEFLAG_NAME _TESTADD_SANITIZEFLAG_${_name})
+  set(CMAKE_REQUIRED_FLAGS "-Werror -Wfatal-errors")
+  check_c_compiler_flag("-fsanitize=${_name}" ${_TESTADD_SANITIZEFLAG_NAME}_FOUND)
+  if(NOT ${_TESTADD_SANITIZEFLAG_NAME}_FOUND)
+    check_c_compiler_flag("-fsanitize=${_name} -fsanitize-undefined-trap-on-error" SANITIZE_UNDEFINED_TRAP_CHECK)
+    if(${SANITIZE_UNDEFINED_TRAP_CHECK})
+      add_compile_options("-fsanitize=${_name} -fsanitize-undefined-trap-on-error")
+    elseif(${_required})
+      message(FATAL_ERROR "Sanitizer flag -fsanitize=${_name} is required")
+    endif()
+  else()
+    add_compile_options("-fsanitize=${_name}")
+  endif()
+endfunction()
+
+# Checks if given compiler flag is used
+# _name flag name
+# _result variable used for boolean result
+function(has_compiler_flag _name _result)
+  get_directory_property(MYCOMPILEFLAGS COMPILE_OPTIONS)
+  if("-${_name}" IN_LIST MYCOMPILEFLAGS)
+    set(${_result} ON)
+  else()
+    set(${_result} OFF)
+  endif()
+  return(PROPAGATE ${_result})
+endfunction()
+
+# Check if compiler accepts flag and append it to a variable
+# _name flag name
+# _required boolean to fail if check doesn't pass
+# _result result variable
+function(testwrite_compiler_flag _name _required _result)
+  string(REGEX REPLACE "[^A-Za-z0-9_]" "_" _TESTWRITE_CFLAG_NAME _TESTWRITE_CFLAG_${_name})
+  set(CMAKE_REQUIRED_FLAGS "-Werror -Wfatal-errors")
+  check_c_compiler_flag("-${_name}" ${_TESTWRITE_CFLAG_NAME}_FOUND)
+  if(${_TESTWRITE_CFLAG_NAME}_FOUND)
+    list(APPEND ${_result} "-${_name}")
+    return(PROPAGATE ${_result})
+  elseif(${_required})
+    message(FATAL_ERROR "Compiler flag -${_name} is required")
+  endif()
+endfunction()
