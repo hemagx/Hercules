@@ -151,3 +151,6 @@ add_custom_target(sysinfo
 )
 
 add_dependencies(common sysinfo)
+
+include(GeneralHelpers)
+add_header_all_list("${COMMON_HDRS}")

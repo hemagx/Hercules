@@ -72,3 +72,6 @@ install(
     DESTINATION
     .
 )
+
+include(GeneralHelpers)
+add_header_all_list("${LOGIN_HDRS}")

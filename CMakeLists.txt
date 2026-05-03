@@ -65,6 +65,7 @@ endif()
 
 # Global variables
 set(SOFLAGS "")
+set_property(GLOBAL PROPERTY ALL_HDRS "") # used to store all headers for plugins made as property to make it global
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
   set(RUNNING_ON_LINUX ON)
