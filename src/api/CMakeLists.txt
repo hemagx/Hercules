@@ -49,7 +49,7 @@ set(API_HDRS
   http_include.h
 )
 
-list(APPEND API_HDRS ${CONFIG_HDRS})
+get_property(CONFIG_HDRS GLOBAL PROPERTY ALL_CONFIG_HDRS)
 
 set(API_PRVT
 )
@@ -62,6 +62,7 @@ source_group("API source files"
 source_group("API header files"
   FILES
   ${API_HDRS}
+  ${CONFIG_HDRS}
 )
 
 source_group("API private header files"
@@ -73,6 +74,7 @@ add_executable(api-server
   ${API_SRCS}
   ${API_HDRS}
   ${API_PRVT}
+  ${CONFIG_HDRS}
 )
 
 target_link_libraries(api-server PUBLIC common)

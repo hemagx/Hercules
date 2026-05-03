@@ -135,7 +135,7 @@ set(MAP_HDRS
   vending.h
 )
 
-list(APPEND MAP_HDRS ${CONFIG_HDRS})
+get_property(CONFIG_HDRS GLOBAL PROPERTY ALL_CONFIG_HDRS)
 
 set(MAP_PRVT
   refine.p.h
@@ -149,6 +149,7 @@ source_group("Map source files"
 source_group("Map header files"
   FILES
   ${MAP_HDRS}
+  ${CONFIG_HDRS}
 )
 
 source_group("Map private header files"
@@ -160,6 +161,7 @@ add_executable(map-server
   ${MAP_SRCS}
   ${MAP_HDRS}
   ${MAP_PRVT}
+  ${CONFIG_HDRS}
 )
 
 target_link_libraries(map-server PUBLIC common)

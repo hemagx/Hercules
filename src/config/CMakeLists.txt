@@ -26,3 +26,4 @@ set(CONFIG_HDRS
 
 include(GeneralHelpers)
 add_header_all_list("${CONFIG_HDRS}")
+add_header_all_config_list("${CONFIG_HDRS}")

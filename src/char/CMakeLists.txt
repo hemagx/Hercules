@@ -70,7 +70,7 @@ set(CHAR_HDRS
   capiif.h
 )
 
-list(APPEND CHAR_HDRS ${CONFIG_HDRS})
+get_property(CONFIG_HDRS GLOBAL PROPERTY ALL_CONFIG_HDRS)
 
 set(CHAR_PRVT
 )
@@ -83,6 +83,7 @@ source_group("Char source files"
 source_group("Char header files"
   FILES
   ${CHAR_HDRS}
+  ${CONFIG_HDRS}
 )
 
 source_group("Char private header files"
@@ -94,6 +95,7 @@ add_executable(char-server
   ${CHAR_SRCS}
   ${CHAR_HDRS}
   ${CHAR_PRVT}
+  ${CONFIG_HDRS}
 )
 
 target_link_libraries(char-server PUBLIC common)

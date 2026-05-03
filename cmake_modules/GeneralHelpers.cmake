@@ -25,3 +25,14 @@ function(add_header_all_list _headers)
   endforeach()
   set_property(GLOBAL PROPERTY ALL_HDRS ${OLD_ALL_HDRS})
 endfunction()
+
+# Appends a list of headers to global property ALL_CONFIG_HDRS with their absloute path
+# _headers list of headers
+function(add_header_all_config_list _headers)
+  get_property(OLD_ALL_CONFIG_HDRS GLOBAL PROPERTY ALL_CONFIG_HDRS)
+  foreach(_header IN LISTS _headers)
+    list(APPEND OLD_ALL_CONFIG_HDRS "${CMAKE_CURRENT_SOURCE_DIR}/${_header}")
+  endforeach()
+  set_property(GLOBAL PROPERTY ALL_CONFIG_HDRS ${OLD_ALL_CONFIG_HDRS})
+endfunction()
+

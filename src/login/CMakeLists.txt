@@ -37,7 +37,7 @@ set(LOGIN_HDRS
   lapiif.h
 )
 
-list(APPEND LOGIN_HDRS ${CONFIG_HDRS})
+get_property(CONFIG_HDRS GLOBAL PROPERTY ALL_CONFIG_HDRS)
 
 set(LOGIN_PRVT
   lclif.p.h
@@ -51,6 +51,7 @@ source_group("Login source files"
 source_group("Login header files"
   FILES
   ${LOGIN_HDRS}
+  ${CONFIG_HDRS}
 )
 
 source_group("Login private header files"
@@ -62,6 +63,7 @@ add_executable(login-server
   ${LOGIN_SRCS}
   ${LOGIN_HDRS}
   ${LOGIN_PRVT}
+  ${CONFIG_HDRS}
 )
 
 target_link_libraries(login-server PUBLIC common)
