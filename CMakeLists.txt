@@ -25,6 +25,7 @@ set(PROJECT_NAME hercules LANGUAGES C CXX)
 project(${PROJECT_NAME})
 
 # CMake settings
+enable_testing()
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_C_EXTENSIONS ON)
