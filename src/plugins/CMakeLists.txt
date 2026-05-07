@@ -100,7 +100,7 @@ endfunction()
 add_custom_target(plugins)
 
 # Get all items in the current directory
-file(GLOB dir_items RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *)
+file(GLOB dir_items RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} CONFIGURE_DEPENDS *)
 
 foreach(item ${dir_items})
   if(IS_DIRECTORY

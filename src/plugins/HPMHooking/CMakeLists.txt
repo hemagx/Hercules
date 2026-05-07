@@ -32,7 +32,7 @@ set(HERC_PLUGIN_H
 # List of include files
 set(HPMHOOKING_INCLUDES "")
 
-file(GLOB include_files RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *.inc)
+file(GLOB include_files RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} CONFIGURE_DEPENDS *.inc)
 foreach(file ${include_files})
   list(APPEND HPMHOOKING_INCLUDES "${file}")
 endforeach()
