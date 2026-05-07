@@ -552,6 +552,9 @@ if(${MAX_CONNECTIONS})
   endif()
 endif()
 
+# Checks for external programs that may be needed in some targets/commands
+find_program(DOXYGEN_FOUND doxygen)
+
 get_directory_property(MYDEFS LINK_OPTIONS)
 message("LDFLAGS=${MYDEFS}")
 get_directory_property(MYDEFS COMPILE_OPTIONS)
@@ -563,3 +566,4 @@ include_directories(${PROJECT_SOURCE_DIR}/src)
 include_directories(${PROJECT_SOURCE_DIR}/3rdparty)
 add_subdirectory(3rdparty)
 add_subdirectory(src)
+add_subdirectory(tools/doxygen)
