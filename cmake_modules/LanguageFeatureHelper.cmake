@@ -20,38 +20,58 @@ include(CheckIncludeFile)
 
 # Helpers to test existance of header and add definition for its existance
 # _header header name without .h
-# _def def to be defined if the header is found keep empty to use default scheme
-# _required boolean to fail if check doesn't pass
-function(test_header_def _header _def _required)
+# CDEF name of the def to be defined if the header is found ommit to use default scheme
+# REQUIRED flag to fail if check doesn't pass
+function(test_header_def _header)
+  set(options REQUIRED)
+  set(oneValueArgs CDEF)
+  cmake_parse_arguments(PARSE_ARGV
+    1
+    arg
+    "${options}"
+    "${oneValueArgs}"
+    ""
+  )
+
   string(TOUPPER ${_header} _HEADER_UPPER)
   string(REGEX REPLACE "[^A-Za-z0-9_]" "_" _HEADER_UPPER ${_HEADER_UPPER})
   check_include_file(${_header}.h HAVE_${_HEADER_UPPER}_H)
   if(HAVE_${_HEADER_UPPER}_H)
-    if("${_def}" STREQUAL "")
+    if(NOT arg_CDEF)
       add_compile_definitions(HAVE_${_HEADER_UPPER}_H=1)
     else()
-      add_compile_definitions(${_def})
+      add_compile_definitions(${arg_CDEF})
     endif()
-  elseif(${_required})
+  elseif(${arg_REQUIRED})
     message(FATAL_ERROR "Header ${_header}.h is required")
   endif()
 endfunction()
 
 # Helpers to test existance of a function and add definition for its existance
 # _function function name
-# _def def to be defined if the function is found keep empty to use default scheme
-# _required boolean to fail if check doesn't pass
+# CDEF name of the def to be defined if the function is found ommit to use default scheme
+# REQUIRED flag to fail if check doesn't pass
 include(CheckFunctionExists)
-function(test_function_def _function _def _required)
+function(test_function_def _function)
+  set(options REQUIRED)
+  set(oneValueArgs CDEF)
+  cmake_parse_arguments(PARSE_ARGV
+    1
+    arg
+    "${options}"
+    "${oneValueArgs}"
+    ""
+  )
+
   string(TOUPPER ${_function} _FUNCTION_UPPER)
   check_function_exists(${_function} HAVE_${_FUNCTION_UPPER})
   if(HAVE_${_FUNCTION_UPPER})
-    if("${_def}" STREQUAL "")
+    if(NOT arg_CDEF)
       add_compile_definitions(HAVE_${_FUNCTION_UPPER}=1)
     else()
-      add_compile_definitions(${_def})
+      add_compile_definitions(${arg_CDEF})
     endif()
-  elseif(${_required})
+  elseif(${arg_REQUIRED})
     message(FATAL_ERROR "Function ${_function} is required")
   endif()
 endfunction()
