@@ -100,6 +100,8 @@ add_executable(char-server
 
 target_link_libraries(char-server PUBLIC common)
 
+add_dependencies(sql char-server)
+
 install(
   TARGETS char-server
   RUNTIME

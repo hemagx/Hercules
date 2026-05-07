@@ -174,5 +174,7 @@ install(
     .
 )
 
+add_dependencies(sql map-server)
+
 include(GeneralHelpers)
 add_header_all_list("${MAP_HDRS}")

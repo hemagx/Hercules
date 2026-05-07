@@ -16,6 +16,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+add_custom_target(sql) # used to emulate the behavior of old makefiles to compile all servers
+
 add_subdirectory(config) # Has to be first as it defines some variables
 add_subdirectory(api)
 add_subdirectory(common)
