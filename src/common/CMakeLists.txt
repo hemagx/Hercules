@@ -90,7 +90,7 @@ set(COMMON_HDRS
   config/defc.h
   config/emblems.h
   config/undefc.h
-  ../plugins/HPMHooking.h
+  ../plugins/HPMHooking/HPMHooking.h
 )
 
 list(APPEND COMMON_HDRS ${CONFIG_HDRS})

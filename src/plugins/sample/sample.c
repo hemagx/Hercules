@@ -18,26 +18,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*
-// add custom compile flags. Can be any compiler flags.
--DTESTVAR -DTESTVAR2=2 #PLUGINFLAGS
-*/
-
-#ifndef WIN32
-
-// check is TESTVAR defined from custom compile flags
-#ifndef TESTVAR
-#error TESTVAR not defined
-#endif
-
-// check is TESTVAR2 defined to value 2 from custom compile flags
-#if !(TESTVAR2 == 2)
-#error TESTVAR2 not defined
-#endif
-
-#endif  // WIN32
-
 /// Sample Hercules Plugin
+
+#include "plugins/sample/sample.h"
 
 #include "common/hercules.h" /* Should always be the first Hercules file included! (if you don't make it first, you won't be able to use interfaces) */
 #include "common/memmgr.h"
@@ -51,7 +34,7 @@
 #include "map/pc.h"
 #include "map/script.h"
 
-#include "plugins/HPMHooking.h"
+#include "plugins/HPMHooking/HPMHooking.h"
 #include "common/HPMDataCheck.h" /* should always be the last Hercules file included! (if you don't make it last, it'll intentionally break compile time) */
 
 #include <stdio.h>

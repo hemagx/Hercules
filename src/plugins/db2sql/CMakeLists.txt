@@ -16,11 +16,14 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-add_subdirectory(config) # Has to be first as it defines some variables
-add_subdirectory(api)
-add_subdirectory(common)
-add_subdirectory(char)
-add_subdirectory(login)
-add_subdirectory(map)
-add_subdirectory(plugins)
-add_subdirectory(test)
+# Plugin name
+set(HERC_PLUGIN_NAME db2sql)
+
+# List of source files of the plugin
+set(HERC_PLUGIN_C
+  db2sql.c
+)
+
+add_plugin_target(${HERC_PLUGIN_NAME}
+  CFILES ${HERC_PLUGIN_C}
+)
