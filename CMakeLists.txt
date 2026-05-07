@@ -554,6 +554,7 @@ endif()
 
 # Checks for external programs that may be needed in some targets/commands
 find_program(DOXYGEN_FOUND doxygen)
+find_program(PERL_FOUND perl)
 
 get_directory_property(MYDEFS LINK_OPTIONS)
 message("LDFLAGS=${MYDEFS}")
@@ -567,3 +568,4 @@ include_directories(${PROJECT_SOURCE_DIR}/3rdparty)
 add_subdirectory(3rdparty)
 add_subdirectory(src)
 add_subdirectory(tools/doxygen)
+add_subdirectory(tools/HPMHookGen)
