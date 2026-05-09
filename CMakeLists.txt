@@ -25,7 +25,6 @@ set(PROJECT_NAME hercules LANGUAGES C CXX)
 project(${PROJECT_NAME})
 
 # CMake settings
-enable_testing()
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_C_EXTENSIONS ON)
@@ -119,6 +118,7 @@ option(ENABLE_WERROR "Enables -Werror in the compiler flags. (disabled by defaul
 option(DISABLE_RENEWAL "Disable Ragnarok Renewal support (override settings in src/config/renewal.h)" OFF)
 set(MAX_CONNECTIONS "" CACHE STRING "optionally set the maximum connections the core can handle (Without epoll enabled, default: 1024. With epol enabled: 3072)")
 set(WITH_HTTP_PARSER "http-parser" CACHE STRING "select http parser. Allowed values: http-parser, llhttp")
+option(ENABLE_TESTING "Enables compiling and running of tests" OFF)
 
 if(CMAKE_C_BYTE_ORDER STREQUAL "BIG_ENDIAN")
   message(FATAL_ERROR "bigendian is not supported... stopping")
