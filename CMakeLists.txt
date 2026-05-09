@@ -556,6 +556,23 @@ endif()
 find_program(DOXYGEN_FOUND doxygen)
 find_program(PERL_FOUND perl)
 
+# Checks and creates the import conf directory
+if(EXISTS "${CMAKE_SOURCE_DIR}/conf/import")
+  message(STATUS "config import directory already exists.")
+else()
+  message(STATUS "creating config import directory ${CMAKE_SOURCE_DIR}/conf/import")
+  file(MAKE_DIRECTORY "${CMAKE_SOURCE_DIR}/conf/import")
+endif()
+
+# Check import templates and copy them if not already copied
+file(GLOB_RECURSE import_tmpl_items RELATIVE "${CMAKE_SOURCE_DIR}/conf/import-tmpl/" CONFIGURE_DEPENDS "conf/import-tmpl/*")
+foreach(tmpl_name ${import_tmpl_items})
+  if(NOT EXISTS "${CMAKE_SOURCE_DIR}/conf/import/${tmpl_name}")
+    message(STATUS "Creating ${CMAKE_SOURCE_DIR}/conf/import/${tmpl_name}")
+    file(COPY_FILE "${CMAKE_SOURCE_DIR}/conf/import-tmpl/${tmpl_name}" "${CMAKE_SOURCE_DIR}/conf/import/${tmpl_name}")
+  endif()
+endforeach()
+
 get_directory_property(MYDEFS LINK_OPTIONS)
 message("LDFLAGS=${MYDEFS}")
 get_directory_property(MYDEFS COMPILE_OPTIONS)
