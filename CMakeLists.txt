@@ -48,8 +48,8 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_BINARY_DIR)
   message(FATAL_ERROR "In-source builds are not allowed. Please create a separate build directory.")
 endif()
 
-if(NOT CMAKE_INSTALL_PREFIX)
-  message(FATAL_ERROR "Installation path is missing. Please pass it to cmake.")
+if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+  set_property(CACHE CMAKE_INSTALL_PREFIX PROPERTY VALUE "${CMAKE_SOURCE_DIR}/bin")
 endif()
 
 if(NOT CMAKE_BUILD_TYPE)
