@@ -132,10 +132,10 @@ function(has_compiler_flag _name _result)
 endfunction()
 
 # Check if compiler accepts flag and append it to a variable
-# _name flag name
 # _result result variable
+# _name flag name
 # REQUIRED flag to fail if check doesn't pass
-function(testwrite_compiler_flag _name _result)
+function(testwrite_compiler_flag _result _name)
   set(options REQUIRED)
   cmake_parse_arguments(PARSE_ARGV
     2

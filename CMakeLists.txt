@@ -271,7 +271,7 @@ if(NOT ${HAS_NO_FORMAT_TRANSACTION})
 endif()
 
 # Plugin flags
-testwrite_compiler_flag(fPIC PLUGIN_COMPILE_OPTIONS)
+testwrite_compiler_flag(PLUGIN_COMPILE_OPTIONS fPIC)
 
 # Linker flags
 
