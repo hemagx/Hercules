@@ -127,7 +127,7 @@ endif()
 target_link_libraries(common PRIVATE mariadb-connector-c::mariadb-connector-c)
 target_link_libraries(common PRIVATE ZLIB::ZLIB)
 
-if("${COMMON_MEMORY_MANAGER_LINK}")
+if(COMMON_MEMORY_MANAGER_LINK)
   target_link_libraries(common PRIVATE ${COMMON_MEMORY_MANAGER_LINK})
 endif()
 

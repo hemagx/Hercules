@@ -44,7 +44,7 @@ if(NOT CMAKE_SYSTEM_NAME STREQUAL "Windows")
   endif()
 endif()
 
-if(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
+if(CMAKE_SOURCE_DIR STREQUAL CMAKE_BINARY_DIR)
   message(FATAL_ERROR "In-source builds are not allowed. Please create a separate build directory.")
 endif()
 
@@ -73,7 +73,7 @@ endif()
 # Auto generated files directory in build dir
 set(AUTOGEN_DIR "${CMAKE_BINARY_DIR}/autogen")
 file(MAKE_DIRECTORY "${AUTOGEN_DIR}")
-include_directories(${AUTOGEN_DIR})
+include_directories("${AUTOGEN_DIR}")
 
 include(CMakeDependentOption)
 # Configuration options
@@ -228,7 +228,7 @@ endif()
 # Certain versions of gcc make -Wshadow completely useless by making it flood
 # you with unnecessary warnings <https://lkml.org/lkml/2006/11/28/239>
 # Let's check if we can really use it
-set(OLD_CMAKE_REQUIRED_FLAGS ${CMAKE_REQUIRED_FLAGS})
+set(OLD_CMAKE_REQUIRED_FLAGS "${CMAKE_REQUIRED_FLAGS}")
 set(CMAKE_REQUIRED_FLAGS "${CMAKE_REQUIRED_FLAGS} -Werror -Wshadow")
 check_c_source_compiles([[
   int foo(void) {
@@ -243,15 +243,15 @@ check_c_source_compiles([[
 if(${IS_WSHADOW_GOOD})
   testadd_warning_compiler_flag(shadow)
 endif()
-set(CMAKE_REQUIRED_FLAGS ${OLD_CMAKE_REQUIRED_FLAGS})
+set(CMAKE_REQUIRED_FLAGS "${OLD_CMAKE_REQUIRED_FLAGS}")
 
 # Certain versions of gcc implement -Wformat-truncation in a naive way,
 # disregarding the actual values that an integer can take in every code path
 # and assuming a worst case of INT_MAX. That makes it not very useful as it
 # produces meaningless warnings.
 has_compiler_flag(Wno-format-truncation HAS_NO_FORMAT_TRANSACTION)
-if(NOT ${HAS_NO_FORMAT_TRANSACTION})
-  set(OLD_CMAKE_REQUIRED_FLAGS ${CMAKE_REQUIRED_FLAGS})
+if(NOT HAS_NO_FORMAT_TRANSACTION)
+  set(OLD_CMAKE_REQUIRED_FLAGS "${CMAKE_REQUIRED_FLAGS}")
   set(CMAKE_REQUIRED_FLAGS "${CMAKE_REQUIRED_FLAGS} -Werror")
   check_c_source_compiles([[
       #include <stdio.h>
@@ -264,10 +264,10 @@ if(NOT ${HAS_NO_FORMAT_TRANSACTION})
 			}
   ]] IS_FORMAT_TRANSACTION_GOOD)
 
-  if(NOT ${IS_FORMAT_TRANSACTION_GOOD})
+  if(NOT IS_FORMAT_TRANSACTION_GOOD)
     testadd_warning_compiler_flag(no-format-truncation)
   endif()
-  set(CMAKE_REQUIRED_FLAGS ${OLD_CMAKE_REQUIRED_FLAGS})
+  set(CMAKE_REQUIRED_FLAGS "${OLD_CMAKE_REQUIRED_FLAGS}")
 endif()
 
 # Plugin flags
@@ -305,7 +305,7 @@ check_source_runs(C [[
 		return clock_gettime(CLOCK_MONOTONIC, &tval);
 	}
 ]] HAVE_MONOTONIC_CLOCK)
-if(${HAVE_MONOTONIC_CLOCK})
+if(HAVE_MONOTONIC_CLOCK)
   message(STATUS "CLOCK_MONOTONIC is supported and working")
   add_compile_definitions(HAVE_MONOTONIC_CLOCK)
 else()
@@ -313,7 +313,7 @@ else()
 endif()
 
 # Check if epoll is available and we're on linux
-if(${ENABLE_EPOLL})
+if(ENABLE_EPOLL)
   check_source_runs(C [[
 	  #ifndef __linux__
 		#error This is not Linux
@@ -340,10 +340,10 @@ if(ENABLE_LIBBACKTRACE)
   add_compile_definitions(HAVE_LIBBACKTRACE)
 endif()
 
-if("${WITH_HTTP_PARSER}" STREQUAL "http-parser")
+if(WITH_HTTP_PARSER STREQUAL "http-parser")
   add_compile_definitions(USE_HTTP_PARSER)
   message(STATUS "Use http-parser as http library")
-elseif("${WITH_HTTP_PARSER}" STREQUAL "llhttp")
+elseif(WITH_HTTP_PARSER STREQUAL "llhttp")
   message(STATUS "Use llhttp as http library")
 else()
   message(FATAL_ERROR "unknown http_parser selected '${WITH_HTTP_PARSER}'. Allowed values: http-parser, llhttp. ... stopping")
@@ -356,20 +356,20 @@ find_package(ZLIB REQUIRED)
 
 # Check for compile settings
 
-if(${ENABLE_MEMORY_MANAGER} STREQUAL "no")
+if(ENABLE_MEMORY_MANAGER STREQUAL "no")
   add_compile_definitions(NO_MEMMGR)
-elseif(${ENABLE_MEMORY_MANAGER} STREQUAL "memwatch")
+elseif(ENABLE_MEMORY_MANAGER STREQUAL "memwatch")
   test_header_def(memwatch REQUIRED)
   add_compile_definitions(MEMWATCH)
-elseif(${ENABLE_MEMORY_MANAGER} STREQUAL "dmalloc")
+elseif(ENABLE_MEMORY_MANAGER STREQUAL "dmalloc")
   test_header_def(dmalloc REQUIRED)
   add_compile_definitions(DMALLOC DMALLOC_FUNC_CHECK)
   set(COMMON_MEMORY_MANAGER_LINK "dmalloc")
-elseif(${ENABLE_MEMORY_MANAGER} STREQUAL "gcollect")
+elseif(ENABLE_MEMORY_MANAGER STREQUAL "gcollect")
   test_header_def(gc REQUIRED)
   add_compile_definitions(GCOLLECT)
   set(COMMON_MEMORY_MANAGER_LINK "gc")
-elseif(${ENABLE_MEMORY_MANAGER} STREQUAL "bcheck")
+elseif(ENABLE_MEMORY_MANAGER STREQUAL "bcheck")
   add_compile_definitions(BCHECK)
 elseif(NOT "${ENABLE_MEMORY_MANAGER}" STREQUAL "builtin")
     message(FATAL_ERROR "Unknown memory manager chosen ${ENABLE_MEMORY_MANAGER}")
@@ -379,31 +379,31 @@ if(PACKETVER)
   add_compile_definitions("PACKETVER=${PACKETVER}")
 endif()
 
-if(${ENABLE_PACKETVER_RE})
+if(ENABLE_PACKETVER_RE)
   add_compile_definitions(ENABLE_PACKETVER_RE)
 endif()
 
-if(${ENABLE_PACKETVER_ZERO})
+if(ENABLE_PACKETVER_ZERO)
   add_compile_definitions(ENABLE_PACKETVER_ZERO)
 endif()
 
-if(${ENABLE_PACKETVER_SAK})
+if(ENABLE_PACKETVER_SAK)
   add_compile_definitions(ENABLE_PACKETVER_SAK)
 endif()
 
-if(${ENABLE_PACKETVER_AD})
+if(ENABLE_PACKETVER_AD)
   add_compile_definitions(ENABLE_PACKETVER_AD)
 endif()
 
-if(${CASHSHOP_PREVIEW_PATCH})
+if(CASHSHOP_PREVIEW_PATCH)
   add_compile_definitions(ENABLE_CASHSHOP_PREVIEW_PATCH)
 endif()
 
-if(${OLD_CASHSHOP_PREVIEW_PATCH})
+if(OLD_CASHSHOP_PREVIEW_PATCH)
   add_compile_definitions(ENABLE_OLD_CASHSHOP_PREVIEW_PATCH)
 endif()
 
-if(${ENABLE_EPOLL})
+if(ENABLE_EPOLL)
   add_compile_definitions(SOCKET_EPOLL)
 endif()
 
@@ -428,23 +428,23 @@ if(NOT "${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
   endif()
 endif()
 
-if("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
   add_compile_definitions(DEBUG)
   if(${ENABLE_GDB})
     testadd_compiler_flag(ggdb REQUIRED)
   endif()
 endif()
 
-if(${ENABLE_BUILDBOT})
+if(ENABLE_BUILDBOT)
   add_compile_definitions(BUILDBOT)
 endif()
 
-if(${ENABLE_RDTSC})
+if(ENABLE_RDTSC)
   add_compile_definitions(ENABLE_RDTSC)
 endif()
 
-if("${ENABLE_PROFILER}" STREQUAL "no")
-elseif("${ENABLE_PROFILER}" STREQUAL "gprof")
+if(ENABLE_PROFILER STREQUAL "no")
+elseif(ENABLE_PROFILER STREQUAL "gprof")
   add_compile_options(pg)
   add_link_options(pg)
 else()
@@ -455,18 +455,18 @@ if(NOT ENABLE_RENEWAL)
   add_compile_definitions(DISABLE_RENEWAL)
 endif()
 
-if(${ENABLE_WERROR})
+if(ENABLE_WERROR)
   testadd_warning_compiler_flag(error REQUIRED)
 endif()
 
-if(${ENABLE_LTO})
+if(ENABLE_LTO)
   testadd_compiler_flag(flto REQUIRED)
   testadd_compiler_flag(ffat-lto-objects REQUIRED)
   testadd_linker_flag(flto REQUIRED)
   testadd_linker_flag(ffat-lto-objects REQUIRED)
 endif()
 
-if(${ENABLE_SANITIZE})
+if(ENABLE_SANITIZE)
   add_compile_definitions(SANITIZE)
   testadd_sanitizer_flag(address)
   testadd_sanitizer_flag(shift)
@@ -496,8 +496,8 @@ if(${ENABLE_SANITIZE})
   testadd_sanitizer_flag(sanitize-address-use-after-scope)
 endif()
 
-if(${MAX_CONNECTIONS})
-  if(${MAX_CONNECTIONS} GREATER 0)
+if(MAX_CONNECTIONS)
+  if(MAX_CONNECTIONS GREATER 0)
     add_compile_definitions("MAXCONN=${MAX_CONNECTIONS}")
   endif()
 endif()
