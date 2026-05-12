@@ -95,6 +95,3 @@ install(
     DESTINATION
     .
 )
-
-include(GeneralHelpers)
-add_header_all_list("${API_HDRS}")

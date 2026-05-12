@@ -18,11 +18,7 @@
 
 cmake_minimum_required(VERSION 3.25)
 
-# CMake Policies
-cmake_policy(SET CMP0140 NEW)
-
-set(PROJECT_NAME hercules LANGUAGES C CXX)
-project(${PROJECT_NAME})
+project(hercules LANGUAGES C CXX)
 
 # CMake settings
 set(CMAKE_C_STANDARD 11)
@@ -64,8 +60,7 @@ if(CMAKE_SIZEOF_VOID_P EQUAL 4)
 endif()
 
 # Global variables
-set(SOFLAGS "")
-set_property(GLOBAL PROPERTY ALL_HDRS "") # used to store all headers for plugins made as property to make it global
+set(PLUGIN_COMPILE_OPTIONS "")
 set_property(GLOBAL PROPERTY ALL_CONFIG_HDRS "") # used to store all config headers made as property to make it global
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
@@ -112,7 +107,6 @@ option(ENABLE_RDTSC "Uses rdtsc as timing source (disabled by default)
 set(ENABLE_PROFILER "no" CACHE STRING "Profilers: no, gprof (disabled by default)")
 option(ENABLE_RENEWAL "Enable renewal" ON)
 option(ENABLE_LTO "Enables or Disables Linktime Code Optimization (LTO is disabled by default)" OFF)
-option(ENABLE_STATIC_LINKING "Enables or Disables Statick Linking (STATIC is disabled by default)" OFF)
 option(ENABLE_SANITIZE "Enables sanitizer. (disabled by default)" OFF)
 option(ENABLE_WERROR "Enables -Werror in the compiler flags. (disabled by default)" OFF)
 option(DISABLE_RENEWAL "Disable Ragnarok Renewal support (override settings in src/config/renewal.h)" OFF)
@@ -277,7 +271,7 @@ if(NOT ${HAS_NO_FORMAT_TRANSACTION})
 endif()
 
 # Plugin flags
-testwrite_compiler_flag(fPIC SOFLAGS)
+testwrite_compiler_flag(fPIC PLUGIN_COMPILE_OPTIONS)
 
 # Linker flags
 
@@ -362,19 +356,7 @@ find_package(ZLIB REQUIRED)
 
 # Check for compile settings
 
-# Memory manager setting
-set(ENABLE_MEMORY_MANAGER_ALLOWED
-  no
-  builtin
-  memwatch
-  dmalloc
-  gcollect
-  bcheck
-)
-
-if(NOT ${ENABLE_MEMORY_MANAGER} IN_LIST ENABLE_MEMORY_MANAGER_ALLOWED)
-  message(FATAL_ERROR "unknown memory manager '${ENABLE_MEMORY_MANAGER}'... stopping")
-elseif(${ENABLE_MEMORY_MANAGER} STREQUAL "no")
+if(${ENABLE_MEMORY_MANAGER} STREQUAL "no")
   add_compile_definitions(NO_MEMMGR)
 elseif(${ENABLE_MEMORY_MANAGER} STREQUAL "memwatch")
   test_header_def(memwatch REQUIRED)
@@ -389,6 +371,8 @@ elseif(${ENABLE_MEMORY_MANAGER} STREQUAL "gcollect")
   set(COMMON_MEMORY_MANAGER_LINK "gc")
 elseif(${ENABLE_MEMORY_MANAGER} STREQUAL "bcheck")
   add_compile_definitions(BCHECK)
+elseif(NOT "${ENABLE_MEMORY_MANAGER}" STREQUAL "builtin")
+    message(FATAL_ERROR "Unknown memory manager chosen ${ENABLE_MEMORY_MANAGER}")
 endif()
 
 if(${ENABLE_PACKETVER})
@@ -448,8 +432,6 @@ if("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
   add_compile_definitions(DEBUG)
   if(${ENABLE_GDB})
     testadd_compiler_flag(ggdb REQUIRED)
-  else()
-    testadd_compiler_flag(g REQUIRED)
   endif()
 endif()
 
@@ -475,34 +457,6 @@ endif()
 
 if(NOT ${ENABLE_RENEWAL})
   add_compile_definitions(DISABLE_RENEWAL)
-endif()
-
-if(${ENABLE_STATIC_LINKING})
-  set(OLD_CMAKE_REQUIRED_FLAGS ${CMAKE_REQUIRED_FLAGS})
-  set(CMAKE_REQUIRED_FLAGS "${CMAKE_REQUIRED_FLAGS} -static")
-  check_source_runs(C [[
-  	int main(int argc, char **argv){
-			return 0;
-		}
-  ]] STATIC_LINK_SERVER)
-  set(CMAKE_REQUIRED_FLAGS ${OLD_CMAKE_REQUIRED_FLAGS})
-
-  if(${STATIC_LINK_SERVER})
-    add_compile_options(-static)
-  endif()
-
-  set(OLD_CMAKE_REQUIRED_FLAGS ${CMAKE_REQUIRED_FLAGS})
-  set(CMAKE_REQUIRED_FLAGS "${CMAKE_REQUIRED_FLAGS} -static-libgcc")
-  check_source_runs(C [[
-  	int main(int argc, char **argv){
-			return 0;
-		}
-  ]] STATIC_LINK_PLUGIN)
-  set(CMAKE_REQUIRED_FLAGS ${OLD_CMAKE_REQUIRED_FLAGS})
-
-  if(${STATIC_LINK_PLUGIN})
-    list(APPEND ${SOFLAGS} "-static-libgcc")
-  endif()
 endif()
 
 if(${ENABLE_WERROR})

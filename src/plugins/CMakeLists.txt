@@ -62,7 +62,7 @@ function(add_plugin_target _plugin_name)
   add_dependencies("plugin.${_plugin_name}" ${_plugin_name})
   add_dependencies(plugins ${_plugin_name})
 
-  target_compile_options(${_plugin_name} PRIVATE ${SOFLAGS})
+  target_compile_options(${_plugin_name} PRIVATE ${PLUGIN_COMPILE_OPTIONS})
   if(arg_CDEFS)
     target_compile_definitions(${_plugin_name} PRIVATE ${_cdefs})
   endif()
