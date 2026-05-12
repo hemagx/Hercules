@@ -51,7 +51,7 @@ function(add_plugin_target _plugin_name)
     endforeach()
   endif()
 
-  if (arg_CFLAGS)
+  if(arg_CFLAGS)
     foreach(value IN LISTS arg_CFLAGS)
       list(APPEND _cflags "${value}")
     endforeach()
@@ -63,10 +63,16 @@ function(add_plugin_target _plugin_name)
   add_dependencies(plugins ${_plugin_name})
 
   target_compile_options(${_plugin_name} PRIVATE ${PLUGIN_COMPILE_OPTIONS})
+  if(PLUGIN_INSTALL_RPATH)
+    set_target_properties(${_plugin_name}
+      PROPERTIES INSTALL_RPATH ${PLUGIN_INSTALL_RPATH}
+    )
+  endif()
+
   if(arg_CDEFS)
     target_compile_definitions(${_plugin_name} PRIVATE ${_cdefs})
   endif()
-  if (arg_CFLAGS)
+  if(arg_CFLAGS)
     target_compile_options(${_plugin_name} PRIVATE ${_cflags})
   endif()
   set_target_properties(${_plugin_name} PROPERTIES PREFIX "")
@@ -79,7 +85,7 @@ function(add_plugin_target _plugin_name)
   target_link_libraries(${_plugin_name} PRIVATE mariadb-connector-c::mariadb-connector-c)
   target_link_libraries(${_plugin_name} PRIVATE ZLIB::ZLIB)
 
-  if (arg_VIRTUAL_TARGET)
+  if(arg_VIRTUAL_TARGET)
     add_dependencies(${arg_VIRTUAL_TARGET} ${_plugin_name})
   endif()
 
@@ -91,7 +97,7 @@ function(add_plugin_target _plugin_name)
       plugins
     LIBRARY
       DESTINATION
-      plugins
+      herc-plugins
   )
 
   message(STATUS "Added plugin ${_plugin_name} to build files")
