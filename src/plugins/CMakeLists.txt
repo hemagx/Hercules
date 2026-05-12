@@ -84,6 +84,7 @@ function(add_plugin_target _plugin_name)
   endif()
   target_link_libraries(${_plugin_name} PRIVATE mariadb-connector-c::mariadb-connector-c)
   target_link_libraries(${_plugin_name} PRIVATE ZLIB::ZLIB)
+  target_link_libraries(${_plugin_name} PRIVATE GIF::GIF)
 
   if(arg_VIRTUAL_TARGET)
     add_dependencies(${arg_VIRTUAL_TARGET} ${_plugin_name})
