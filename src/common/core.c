@@ -260,7 +260,7 @@ static bool usercheck(void)
 	return true;
 }
 
-static bool core_get_executable_path(char *buf, size_t length)
+static bool get_executable_path(char *buf, size_t length)
 {
 #if defined(WIN32)
 	char *exe_path = NULL;
@@ -307,8 +307,6 @@ static bool core_get_executable_path(char *buf, size_t length)
 
 static void core_defaults(void)
 {
-	core->executable_path = executable_path;
-
 	nullpo_defaults();
 	hpm_defaults();
 	HCache_defaults();
@@ -550,9 +548,11 @@ int main(int argc, char **argv)
 		core->arg_v = argv;
 		core->runflag = CORE_ST_RUN;
 	}
+	core->executable_path = executable_path;
+
 	core_defaults();
 
-	if (!core_get_executable_path(executable_path, sizeof executable_path)) {
+	if (!get_executable_path(executable_path, sizeof executable_path)) {
 		safestrncpy(executable_path, "hercules", sizeof executable_path);
 	}
 
