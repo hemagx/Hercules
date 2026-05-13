@@ -50,9 +50,20 @@
 
 #ifndef _WIN32
 #	include <unistd.h>
-#else
-#	include "common/winapi.h" // Console close event handling
 #endif
+#if defined(WIN32)
+#	include "common/winapi.h" // Console close event handling
+#elif defined(__sun)
+#	include <limits.h>
+#elif defined(__linux) || defined(__linux__)
+#	include <limits.h>
+#elif defined(__APPLE__) && defined(__MACH__)
+#	include <mach-o/dyld.h>
+#elif defined(__FreeBSD__) || defined(__NetBSD__) || defined(__OpenBSD__) || defined(__bsdi__) || defined(__DragonFly__)
+#	include <sys/types.h>
+#	include <sys/sysctl.h>
+#endif
+
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -81,6 +92,7 @@
 
 static struct core_interface core_s;
 struct core_interface *core = &core_s;
+static char executable_path[PATH_MAX];
 
 // Added by Gabuzomeu
 //
@@ -244,8 +256,55 @@ static bool usercheck(void)
 	return true;
 }
 
+static bool core_get_executable_path(char *buf, size_t length)
+{
+#if defined(WIN32)
+	char *exe_path = NULL;
+	if (_get_pgmptr(&exe_path) != 0)
+		return false;
+	safestrncpy(buf, exe_path, length);
+	return true;
+#elif defined(__sun)
+	if (length < MAX_PATH)
+		return false;
+	if (realpath(getexecname(), buf) == NULL)
+		return false;
+	buf[length - 1] = '\0';
+	return true;
+#elif defined(__linux) || defined(__linux__)
+	ssize_t len = readlink("/proc/self/exe", buf, length);
+	if (len <= 0 || len == length)
+		return false;
+	buf[len] = '\0';
+	return true;
+#elif defined(__APPLE__) && defined(__MACH__)
+	uint32_t len = (uint32_t)length;
+	if (_NSGetExecutablePath(buf, &len) != 0)
+		return false; // buffer too small (!)
+	// resolve symlinks, ., .. if possible
+	char *canonical_path = realpath(buf, NULL);
+	if (canonical_path != NULL) {
+		safestrncpy(buf, canonical_path, length);
+		free(canonical_path);
+	}
+	return true;
+#elif defined(__FreeBSD__) || defined(__NetBSD__) || defined(__OpenBSD__) || defined(__bsdi__) || defined(__DragonFly__)
+	int mib[4];
+	mib[0] = CTL_KERN;
+	mib[1] = KERN_PROC;
+	mib[2] = KERN_PROC_PATHNAME;
+	mib[3] = -1;
+	if (sysctl(mib, 4, buf, &length, NULL, 0) != 0)
+		return false;
+	return true;
+#endif
+	return false;
+}
+
 static void core_defaults(void)
 {
+	core->executable_path = executable_path;
+
 	nullpo_defaults();
 	hpm_defaults();
 	HCache_defaults();
@@ -488,6 +547,10 @@ int main(int argc, char **argv)
 		core->runflag = CORE_ST_RUN;
 	}
 	core_defaults();
+
+	if (!core_get_executable_path(executable_path, sizeof executable_path)) {
+		safestrncpy(executable_path, "hercules", sizeof executable_path);
+	}
 
 	iMalloc->init();// needed for Show* in display_title() [FlavioJS]
 	showmsg->init();
