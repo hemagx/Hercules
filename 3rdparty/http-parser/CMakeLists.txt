@@ -39,4 +39,6 @@ add_library(hercules-http_parser STATIC
   ${HERC_HTTP_PARSER_HDRS}
 )
 
-target_compile_options(hercules-http_parser PRIVATE -Wno-shadow -Wno-switch-enum)
+if(NOT CMAKE_SYSTEM_NAME STREQUAL "Windows")
+  target_compile_options(hercules-http_parser PRIVATE -Wno-shadow -Wno-switch-enum)
+endif()

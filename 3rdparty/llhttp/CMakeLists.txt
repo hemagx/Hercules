@@ -41,4 +41,6 @@ add_library(hercules-llhttp STATIC
   ${HERC_LLHTTP_HDRS}
 )
 
-target_compile_options(hercules-llhttp PRIVATE -Wno-error -Wno-format -Wno-format-y2k -Wno-format-security -Wno-redundant-decls -Wno-undef -Wno-switch-enum)
+if(NOT CMAKE_SYSTEM_NAME STREQUAL "Windows")
+  target_compile_options(hercules-llhttp PRIVATE -Wno-error -Wno-format -Wno-format-y2k -Wno-format-security -Wno-redundant-decls -Wno-undef -Wno-switch-enum)
+endif()

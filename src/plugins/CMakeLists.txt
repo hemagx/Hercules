@@ -85,6 +85,7 @@ function(add_plugin_target _plugin_name)
   target_link_libraries(${_plugin_name} PRIVATE mariadb-connector-c::mariadb-connector-c)
   target_link_libraries(${_plugin_name} PRIVATE ZLIB::ZLIB)
   target_link_libraries(${_plugin_name} PRIVATE GIF::GIF)
+  target_link_libraries(${_plugin_name} PRIVATE pcre::pcre)
 
   if(arg_VIRTUAL_TARGET)
     add_dependencies(${arg_VIRTUAL_TARGET} ${_plugin_name})
@@ -95,7 +96,7 @@ function(add_plugin_target _plugin_name)
     OPTIONAL
     RUNTIME
       DESTINATION
-      plugins
+      herc-plugins
     LIBRARY
       DESTINATION
       herc-plugins

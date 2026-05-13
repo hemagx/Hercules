@@ -151,88 +151,105 @@ test_function_def(newlocale) # Libconfig
 test_function_def(freelocale) # Libconfig
 test_function_def(setrlimit)
 
-# Check for mandatory compile flags
-include(CompilerFlagHelpers)
-testadd_compiler_flag(pipe REQUIRED)
-testadd_compiler_flag(ffast-math REQUIRED)
-testadd_compiler_flag(fsigned-char)
-testadd_compiler_flag(fcf-protection=none)
-testadd_compiler_flag(fno-strict-aliasing REQUIRED)
-testadd_compiler_flag(fno-omit-frame-pointer REQUIRED)
-testadd_compiler_flag(fno-var-tracking)
+if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+  # Warnings
+  add_compile_options(/W3 /wd4100 /wd4800)
+  add_compile_options(/wd4090) # Disable const qualifier mismatch because msvs doesn't like const passed to our aFree
+  add_compile_options(/wd4244 /wd4267) # Disable int conversion possible lose of data
+  add_compile_options(/wd4018) # Disable signed/unsigned arthmatic mismatch
+  add_compile_options(/wd5287) # Disable enum conversion warning
+  add_compile_options(/wd4312) # Disable conversion to greater size warning (see 0xdeadbeef pointers)
+  # Definations
+  add_compile_definitions(WIN32 _WIN32 __WIN32 _CRT_SECURE_NO_DEPRECATE _CRT_NONSTDC_NO_DEPRECATE FD_SETSIZE=4096 WIN32_LEAN_AND_MEAN)
+  # Define arch
+  if(CMAKE_SIZEOF_VOID_P EQUAL 4)
+    add_compile_definitions(_X86_)
+  else()
+    add_compile_definitions(_ARM64_)
+  endif()
+else()
+  # Check for mandatory compile flags
+  include(CompilerFlagHelpers)
+  testadd_compiler_flag(pipe REQUIRED)
+  testadd_compiler_flag(ffast-math REQUIRED)
+  testadd_compiler_flag(fsigned-char)
+  testadd_compiler_flag(fcf-protection=none)
+  testadd_compiler_flag(fno-strict-aliasing REQUIRED)
+  testadd_compiler_flag(fno-omit-frame-pointer REQUIRED)
+  testadd_compiler_flag(fno-var-tracking)
 
-# Warnings we explictily require or disable
-testadd_warning_compiler_flag(all REQUIRED)
-testadd_warning_compiler_flag(extra REQUIRED)
-testadd_warning_compiler_flag(no-sign-compare REQUIRED)
-testadd_warning_compiler_flag(no-unused-parameter)
-testadd_warning_compiler_flag(no-clobbered)
-testadd_warning_compiler_flag(empty-body)
-testadd_warning_compiler_flag(newline-eof)
-testadd_warning_compiler_flag(int-conversion)
-testadd_warning_compiler_flag(init-self)
-testadd_warning_compiler_flag(pointer-arith)
-testadd_warning_compiler_flag(switch-bool)
-testadd_warning_compiler_flag(enum-conversion)
-testadd_warning_compiler_flag(shorten-64-to-32)
-testadd_warning_compiler_flag(constant-conversion)
-testadd_warning_compiler_flag(bool-conversion)
-testadd_warning_compiler_flag(format-security)
-testadd_warning_compiler_flag(format)
-testadd_warning_compiler_flag(format-signedness)
-testadd_warning_compiler_flag(format-y2k)
-testadd_warning_compiler_flag(format-overflow=2)
-testadd_warning_compiler_flag(format-diag)
-# testadd_warning_compiler_flag(format-truncation=2)
-testadd_warning_compiler_flag(missing-include-dirs)
-testadd_warning_compiler_flag(suggest-attribute=noreturn)
-testadd_warning_compiler_flag(suggest-attribute=format)
-# testadd_warning_compiler_flag(suggest-attribute=malloc)
-testadd_warning_compiler_flag(undef)
-#testadd_warning_compiler_flag(cast-align)
-#testadd_warning_compiler_flag(logical-op) # some useless warnings
-testadd_warning_compiler_flag(nested-externs)
-testadd_warning_compiler_flag(old-style-definition)
-testadd_warning_compiler_flag(overlength-strings)
-testadd_warning_compiler_flag(redundant-decls)
-# testadd_warning_compiler_flag(cast-qual)
-testadd_warning_compiler_flag(misleading-indentation)
-testadd_warning_compiler_flag(null-dereference)
-testadd_warning_compiler_flag(vla)
-testadd_warning_compiler_flag(vla-parameter)
-testadd_warning_compiler_flag(switch-enum)
-testadd_warning_compiler_flag(mismatched-dealloc)
-testadd_warning_compiler_flag(sizeof-array-div)
-testadd_warning_compiler_flag(stringop-overflow=4)
-testadd_warning_compiler_flag(stringop-overread)
-testadd_warning_compiler_flag(string-compare)
-testadd_warning_compiler_flag(zero-length-bounds)
-testadd_warning_compiler_flag(absolute-value)
-testadd_warning_compiler_flag(shift-overflow=2)
-testadd_warning_compiler_flag(enum-int-mismatch)
-#testadd_warning_compiler_flag(unreachable-code)
-#testadd_warning_compiler_flag(unused-const-variable=2)
-#testadd_warning_compiler_flag(write-strings)
-#testadd_warning_compiler_flag(no-format-nonliteral)
-testadd_warning_compiler_flag(no-switch)
-testadd_warning_compiler_flag(no-missing-field-initializers)
-# testadd_warning_compiler_flag(no-suggest-attribute=format)
-testadd_warning_compiler_flag(no-incompatible-pointer-types-discards-qualifiers)
-testadd_warning_compiler_flag(no-discarded-qualifiers)
-testadd_warning_compiler_flag(no-deprecated-non-prototype)
-testadd_warning_compiler_flag(no-unused-but-set-variable)
-testadd_warning_compiler_flag(no-enum-enum-conversion)
+  # Warnings we explictily require or disable
+  testadd_warning_compiler_flag(all REQUIRED)
+  testadd_warning_compiler_flag(extra REQUIRED)
+  testadd_warning_compiler_flag(no-sign-compare REQUIRED)
+  testadd_warning_compiler_flag(no-unused-parameter)
+  testadd_warning_compiler_flag(no-clobbered)
+  testadd_warning_compiler_flag(empty-body)
+  testadd_warning_compiler_flag(newline-eof)
+  testadd_warning_compiler_flag(int-conversion)
+  testadd_warning_compiler_flag(init-self)
+  testadd_warning_compiler_flag(pointer-arith)
+  testadd_warning_compiler_flag(switch-bool)
+  testadd_warning_compiler_flag(enum-conversion)
+  testadd_warning_compiler_flag(shorten-64-to-32)
+  testadd_warning_compiler_flag(constant-conversion)
+  testadd_warning_compiler_flag(bool-conversion)
+  testadd_warning_compiler_flag(format-security)
+  testadd_warning_compiler_flag(format)
+  testadd_warning_compiler_flag(format-signedness)
+  testadd_warning_compiler_flag(format-y2k)
+  testadd_warning_compiler_flag(format-overflow=2)
+  testadd_warning_compiler_flag(format-diag)
+  # testadd_warning_compiler_flag(format-truncation=2)
+  testadd_warning_compiler_flag(missing-include-dirs)
+  testadd_warning_compiler_flag(suggest-attribute=noreturn)
+  testadd_warning_compiler_flag(suggest-attribute=format)
+  # testadd_warning_compiler_flag(suggest-attribute=malloc)
+  testadd_warning_compiler_flag(undef)
+  #testadd_warning_compiler_flag(cast-align)
+  #testadd_warning_compiler_flag(logical-op) # some useless warnings
+  testadd_warning_compiler_flag(nested-externs)
+  testadd_warning_compiler_flag(old-style-definition)
+  testadd_warning_compiler_flag(overlength-strings)
+  testadd_warning_compiler_flag(redundant-decls)
+  # testadd_warning_compiler_flag(cast-qual)
+  testadd_warning_compiler_flag(misleading-indentation)
+  testadd_warning_compiler_flag(null-dereference)
+  testadd_warning_compiler_flag(vla)
+  testadd_warning_compiler_flag(vla-parameter)
+  testadd_warning_compiler_flag(switch-enum)
+  testadd_warning_compiler_flag(mismatched-dealloc)
+  testadd_warning_compiler_flag(sizeof-array-div)
+  testadd_warning_compiler_flag(stringop-overflow=4)
+  testadd_warning_compiler_flag(stringop-overread)
+  testadd_warning_compiler_flag(string-compare)
+  testadd_warning_compiler_flag(zero-length-bounds)
+  testadd_warning_compiler_flag(absolute-value)
+  testadd_warning_compiler_flag(shift-overflow=2)
+  testadd_warning_compiler_flag(enum-int-mismatch)
+  #testadd_warning_compiler_flag(unreachable-code)
+  #testadd_warning_compiler_flag(unused-const-variable=2)
+  #testadd_warning_compiler_flag(write-strings)
+  #testadd_warning_compiler_flag(no-format-nonliteral)
+  testadd_warning_compiler_flag(no-switch)
+  testadd_warning_compiler_flag(no-missing-field-initializers)
+  # testadd_warning_compiler_flag(no-suggest-attribute=format)
+  testadd_warning_compiler_flag(no-incompatible-pointer-types-discards-qualifiers)
+  testadd_warning_compiler_flag(no-discarded-qualifiers)
+  testadd_warning_compiler_flag(no-deprecated-non-prototype)
+  testadd_warning_compiler_flag(no-unused-but-set-variable)
+  testadd_warning_compiler_flag(no-enum-enum-conversion)
 
-if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-  testadd_warning_compiler_flag(no-deprecated-declarations)
-endif()
+  if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+    testadd_warning_compiler_flag(no-deprecated-declarations)
+  endif()
 
-# Certain versions of gcc make -Wshadow completely useless by making it flood
-# you with unnecessary warnings <https://lkml.org/lkml/2006/11/28/239>
-# Let's check if we can really use it
-set(OLD_CMAKE_REQUIRED_FLAGS "${CMAKE_REQUIRED_FLAGS}")
-set(CMAKE_REQUIRED_FLAGS "${CMAKE_REQUIRED_FLAGS} -Werror -Wshadow")
-check_c_source_compiles([[
+  # Certain versions of gcc make -Wshadow completely useless by making it flood
+  # you with unnecessary warnings <https://lkml.org/lkml/2006/11/28/239>
+  # Let's check if we can really use it
+  set(OLD_CMAKE_REQUIRED_FLAGS "${CMAKE_REQUIRED_FLAGS}")
+  set(CMAKE_REQUIRED_FLAGS "${CMAKE_REQUIRED_FLAGS} -Werror -Wshadow")
+  check_c_source_compiles([[
   int foo(void) {
 		return 0;
 	}
@@ -242,20 +259,20 @@ check_c_source_compiles([[
 		return foo + 1;
 	}
 ]] IS_WSHADOW_GOOD)
-if(${IS_WSHADOW_GOOD})
-  testadd_warning_compiler_flag(shadow)
-endif()
-set(CMAKE_REQUIRED_FLAGS "${OLD_CMAKE_REQUIRED_FLAGS}")
+  if(${IS_WSHADOW_GOOD})
+    testadd_warning_compiler_flag(shadow)
+  endif()
+  set(CMAKE_REQUIRED_FLAGS "${OLD_CMAKE_REQUIRED_FLAGS}")
 
-# Certain versions of gcc implement -Wformat-truncation in a naive way,
-# disregarding the actual values that an integer can take in every code path
-# and assuming a worst case of INT_MAX. That makes it not very useful as it
-# produces meaningless warnings.
-has_compiler_flag(Wno-format-truncation HAS_NO_FORMAT_TRANSACTION)
-if(NOT HAS_NO_FORMAT_TRANSACTION)
-  set(OLD_CMAKE_REQUIRED_FLAGS "${CMAKE_REQUIRED_FLAGS}")
-  set(CMAKE_REQUIRED_FLAGS "${CMAKE_REQUIRED_FLAGS} -Werror")
-  check_c_source_compiles([[
+  # Certain versions of gcc implement -Wformat-truncation in a naive way,
+  # disregarding the actual values that an integer can take in every code path
+  # and assuming a worst case of INT_MAX. That makes it not very useful as it
+  # produces meaningless warnings.
+  has_compiler_flag(Wno-format-truncation HAS_NO_FORMAT_TRANSACTION)
+  if(NOT HAS_NO_FORMAT_TRANSACTION)
+    set(OLD_CMAKE_REQUIRED_FLAGS "${CMAKE_REQUIRED_FLAGS}")
+    set(CMAKE_REQUIRED_FLAGS "${CMAKE_REQUIRED_FLAGS} -Werror")
+    check_c_source_compiles([[
       #include <stdio.h>
 			int foo(int argc, char *argv[]) {
 				char buf[3];
@@ -266,21 +283,22 @@ if(NOT HAS_NO_FORMAT_TRANSACTION)
 			}
   ]] IS_FORMAT_TRANSACTION_GOOD)
 
-  if(NOT IS_FORMAT_TRANSACTION_GOOD)
-    testadd_warning_compiler_flag(no-format-truncation)
+    if(NOT IS_FORMAT_TRANSACTION_GOOD)
+      testadd_warning_compiler_flag(no-format-truncation)
+    endif()
+    set(CMAKE_REQUIRED_FLAGS "${OLD_CMAKE_REQUIRED_FLAGS}")
   endif()
-  set(CMAKE_REQUIRED_FLAGS "${OLD_CMAKE_REQUIRED_FLAGS}")
+
+  # Plugin flags
+  testwrite_compiler_flag(PLUGIN_COMPILE_OPTIONS fPIC)
+
+  # Linker flags
+
+  # Check if the linker supports/accepts -rdynamic
+  # Generally only needed by the ELF linker, in order to produce backtraces.
+  # On non-ELF platforms, some compilers (i.e. gcc < 5 and clang on OSX) are able to ignore it, others will error out.
+  testadd_linker_flag(rdynamic)
 endif()
-
-# Plugin flags
-testwrite_compiler_flag(PLUGIN_COMPILE_OPTIONS fPIC)
-
-# Linker flags
-
-# Check if the linker supports/accepts -rdynamic
-# Generally only needed by the ELF linker, in order to produce backtraces.
-# On non-ELF platforms, some compilers (i.e. gcc < 5 and clang on OSX) are able to ignore it, others will error out.
-testadd_linker_flag(rdynamic)
 
 # Checks for language features and behavior
 include(CheckCSourceCompiles)
@@ -375,7 +393,7 @@ elseif(ENABLE_MEMORY_MANAGER STREQUAL "gcollect")
 elseif(ENABLE_MEMORY_MANAGER STREQUAL "bcheck")
   add_compile_definitions(BCHECK)
 elseif(NOT "${ENABLE_MEMORY_MANAGER}" STREQUAL "builtin")
-    message(FATAL_ERROR "Unknown memory manager chosen ${ENABLE_MEMORY_MANAGER}")
+  message(FATAL_ERROR "Unknown memory manager chosen ${ENABLE_MEMORY_MANAGER}")
 endif()
 
 if(PACKETVER)

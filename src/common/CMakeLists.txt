@@ -76,7 +76,6 @@ set(COMMON_HDRS
   sql.h
   strlib.h
   sysinfo.h
-  "${AUTOGEN_DIR}/sysinfo.inc"
   thread.h
   timer.h
   utils.h
@@ -94,6 +93,9 @@ set(COMMON_HDRS
 )
 
 list(APPEND COMMON_HDRS ${CONFIG_HDRS})
+if(NOT CMAKE_SYSTEM_NAME STREQUAL "Windows")
+  list(APPEND COMMON_HDRS "${AUTOGEN_DIR}/sysinfo.inc")
+endif()
 
 set(COMMON_PRVT
 )
@@ -136,18 +138,20 @@ get_directory_property(SYSGEN_CFLAGS COMPILE_OPTIONS)
 get_directory_property(SYSGEN_DEFS COMPILE_DEFINITIONS)
 get_directory_property(SYSGEN_LDFLAGS LINK_OPTIONS)
 
-add_custom_target(sysinfo
-  COMMAND
-    "${CMAKE_SOURCE_DIR}/sysinfogen.sh"
-    "${AUTOGEN_DIR}/sysinfo.inc.new"
-    "${AUTOGEN_DIR}/sysinfo.inc"
-    ${SYSGEN_CFLAGS}
-    ${SYSGEN_LDFLAGS}
-    ${SYSGEN_DEFS}
-  COMMENT "Generate synsinfo.inc"
-  DEPENDS "${CMAKE_SOURCE_DIR}/sysinfogen.sh"
-  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-  BYPRODUCTS "${AUTOGEN_DIR}/sysinfo.inc"
-)
+if(NOT CMAKE_SYSTEM_NAME STREQUAL "Windows")
+  add_custom_target(sysinfo
+    COMMAND
+      "${CMAKE_SOURCE_DIR}/sysinfogen.sh"
+      "${AUTOGEN_DIR}/sysinfo.inc.new"
+      "${AUTOGEN_DIR}/sysinfo.inc"
+      ${SYSGEN_CFLAGS}
+      ${SYSGEN_LDFLAGS}
+      ${SYSGEN_DEFS}
+    COMMENT "Generate synsinfo.inc"
+    DEPENDS "${CMAKE_SOURCE_DIR}/sysinfogen.sh"
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    BYPRODUCTS "${AUTOGEN_DIR}/sysinfo.inc"
+  )
 
-add_dependencies(common sysinfo)
+  add_dependencies(common sysinfo)
+endif()
