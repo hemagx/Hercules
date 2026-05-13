@@ -65,7 +65,6 @@ function(add_test_target _test_name)
   message(STATUS "Added test ${_test_name} to build files")
 endfunction()
 
-enable_testing()
 add_custom_target(tests)
 
 foreach(TEST_NAME IN LISTS MY_PLUGINS HERC_TESTS)

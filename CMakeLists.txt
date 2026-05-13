@@ -117,6 +117,10 @@ set(WITH_HTTP_PARSER "http-parser" CACHE STRING "select http parser. Allowed val
 option(ENABLE_TESTING "Enables compiling and running of tests" OFF)
 option(ENABLE_CLASSIC_AUTOSPELL "Enables classic auto spell list" OFF)
 
+if(ENABLE_TESTING)
+  enable_testing()
+endif()
+
 if(CMAKE_C_BYTE_ORDER STREQUAL "BIG_ENDIAN")
   message(FATAL_ERROR "bigendian is not supported... stopping")
 elseif(NOT CMAKE_C_BYTE_ORDER STREQUAL "LITTLE_ENDIAN")
