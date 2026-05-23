@@ -57,7 +57,7 @@ function(add_plugin_target _plugin_name)
     endforeach()
   endif()
 
-  add_library(${_plugin_name} SHARED EXCLUDE_FROM_ALL ${_cfiles})
+  add_library(${_plugin_name} SHARED ${_cfiles})
   add_custom_target("plugin.${_plugin_name}")
   add_dependencies("plugin.${_plugin_name}" ${_plugin_name})
   add_dependencies(plugins ${_plugin_name})
