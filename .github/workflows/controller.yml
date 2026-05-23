@@ -27,10 +27,11 @@ jobs:
 #    needs: build
 #    if: ${{ !failure() && !cancelled() }}
 #    uses: ./.github/workflows/gcc_test.yml
-  gccsnapshot_test:
-    needs: build
-    if: ${{ !failure() && !cancelled() }}
-    uses: ./.github/workflows/gccsnapshot_test.yml
+# Temporary removed until conan support gccsnapshot version
+#  gccsnapshot_test:
+#    needs: build
+#    if: ${{ !failure() && !cancelled() }}
+#    uses: ./.github/workflows/gccsnapshot_test.yml
   mariadb:
     needs: build
     if: ${{ !failure() && !cancelled() }}
