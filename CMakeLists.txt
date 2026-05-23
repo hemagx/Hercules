@@ -115,6 +115,7 @@ option(ENABLE_WERROR "Enables -Werror in the compiler flags. (disabled by defaul
 set(MAX_CONNECTIONS "" CACHE STRING "optionally set the maximum connections the core can handle (Without epoll enabled, default: 1024. With epol enabled: 3072)")
 set(WITH_HTTP_PARSER "http-parser" CACHE STRING "select http parser. Allowed values: http-parser, llhttp")
 option(ENABLE_TESTING "Enables compiling and running of tests" OFF)
+option(ENABLE_CLASSIC_AUTOSPELL "Enables classic auto spell list" OFF)
 
 if(CMAKE_C_BYTE_ORDER STREQUAL "BIG_ENDIAN")
   message(FATAL_ERROR "bigendian is not supported... stopping")
@@ -522,6 +523,10 @@ if(MAX_CONNECTIONS)
   if(MAX_CONNECTIONS GREATER 0)
     add_compile_definitions("MAXCONN=${MAX_CONNECTIONS}")
   endif()
+endif()
+
+if(ENABLE_CLASSIC_AUTOSPELL)
+  add_compile_definitions("CLASSIC_AUTOSPELL_LIST")
 endif()
 
 # Checks for external programs that may be needed in some targets/commands
