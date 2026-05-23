@@ -36,9 +36,6 @@
 #if defined(_MSC_VER)
 #include "common/winapi.h"
 
-// This checks if C/C++ Compiler Version is 18.00
-#if defined(_MSC_VER)
-
 #if _MSC_VER < 1800 && !defined(_M_X64)
 // When compiling for windows 32bit, the 8byte interlocked operations are not provided by Microsoft
 // (because they need at least i586 so its not generic enough.. ... )
@@ -103,8 +100,6 @@ forceinline volatile int64 InterlockedExchange64(volatile int64 *target, int64 v
 #define InterlockedIncrement(_Addend) _InterlockedIncrement((_Addend))
 #define InterlockedDecrement(_Addend) _InterlockedDecrement((_Addend))
 #endif
-
-#endif //endif _msc_ver check
 
 #elif defined(__GNUC__)
 
