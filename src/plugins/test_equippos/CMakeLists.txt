@@ -29,7 +29,7 @@ set(HERC_PLUGIN_CFLAGS
   -Wno-enum-conversion
 )
 
-if(NOT CMAKE_SYSTEM_NAME STREQUAL "Windows") # Uses GCC extensions
+if(NOT MSVC) # Uses GCC extensions
   add_plugin_target(${HERC_PLUGIN_NAME}
     CFILES ${HERC_PLUGIN_C}
     CFLAGS ${HERC_PLUGIN_CFLAGS}

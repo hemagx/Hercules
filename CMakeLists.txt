@@ -156,7 +156,7 @@ test_function_def(newlocale) # Libconfig
 test_function_def(freelocale) # Libconfig
 test_function_def(setrlimit)
 
-if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+if(MSVC)
   # Warnings
   add_compile_options(/W3 /wd4100 /wd4800)
   add_compile_options(/wd4090) # Disable const qualifier mismatch because msvs doesn't like const passed to our aFree
